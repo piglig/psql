@@ -1,0 +1,52 @@
+{
+    "Operate": {
+      "C": {
+        "Fields": []
+      },
+
+      "R":{
+        "Fields": [],
+        "Conditions": [],
+        "OrderBy": [
+          {
+            "Filed": "",
+            "Order": ""
+          },
+          {
+            "Filed": "",
+            "Order": ""
+          }
+        ]
+      },
+
+      "U": {
+        "Single": [
+          {
+            "Fields": "",
+            "Conditions": []
+          }
+        ],
+        "multiple": [
+          [],
+          []
+        ]
+      },
+
+      "D": {
+        "single": [],
+        "multiple": [
+          [],
+          []
+        ]
+      }
+    },
+
+    "model": {
+      "string": [
+        "Name", "Email"
+      ],
+      "int": [
+        "Gender"
+      ]
+    }
+}
