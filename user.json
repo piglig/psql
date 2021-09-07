@@ -1,9 +1,5 @@
 {
     "Operate": {
-      "C": {
-        "Fields": []
-      },
-
       "R":{
         "Fields": [],
         "Conditions": [],
@@ -20,10 +16,10 @@
       },
 
       "U": {
-        "Single": [
+        "single": [
           {
-            "Fields": "",
-            "Conditions": []
+            "fields": "",
+            "conditions": []
           }
         ],
         "multiple": [
@@ -33,7 +29,9 @@
       },
 
       "D": {
-        "single": [],
+        "single": [
+          "name", "email"
+        ],
         "multiple": [
           [],
           []

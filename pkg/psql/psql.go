@@ -7,6 +7,7 @@ import (
 	"os"
 	"path/filepath"
 	"psql/pkg/logger"
+	"psql/pkg/utils"
 )
 
 const (
@@ -49,12 +50,6 @@ func InitFile(fp string) {
 		logger.Fatal("InitFile io.ReadAll fail:%v", err)
 	}
 
-	//pjsonByte, err := json.Marshal(fByte)
-	//// Check json format
-	//if err != nil {
-	//	logger.Fatal("InitFile json.Marshal fail:%v", err)
-	//}
-
 	p.Content = string(fByte)
 	p.FileName = filepath.Base(fp)
 
@@ -90,6 +85,37 @@ func (p *PSql) checkModel() bool {
 
 func GetModel() Model {
 	return p.pjson.model
+}
+
+// GetFieldType 获取 model 字段类型
+func GetFieldType(field string) string {
+	res := ""
+	if utils.FindStrIgnoreCaseInSlice(field, p.pjson.model.IntAttributes) {
+		res = INT
+	} else if utils.FindStrIgnoreCaseInSlice(field, p.pjson.model.StringAttributes) {
+		res = STRING
+	}
+
+	if res == "" {
+		logger.Error("GetFieldType ", field+" not found in model ", p.pjson.model)
+	}
+
+	return res
+}
+
+// GetSingleDeleteFiledJSON 获取删除操作的单一字段
+func GetSingleDeleteFiledJSON() []string {
+	gjsonRst := p.Get("Operate.D.single").Array()
+	var rst = make([]string, 0)
+	for _, r := range gjsonRst {
+		rst = append(rst, r.String())
+	}
+
+	return rst
+}
+
+func GetMultipleDeleteFiledJSON() {
+
 }
 
 func GetFileName() string {

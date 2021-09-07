@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"os"
+	"psql/pkg/components"
 	"psql/pkg/logger"
 	"psql/pkg/psql"
 	"psql/pkg/utils"
@@ -50,6 +51,25 @@ func (p *PFile) generateModel() {
 	p.generateModelTable(modelName)
 }
 
+func (p *PFile) generateDao() {
+	filename := psql.GetFileName()
+	filePair := strings.Split(filename, ".")
+	daoName := utils.FirstLetterToUpper(filePair[0])
+
+	// dao definition begin
+	p.Content += fmt.Sprintf("type %sDao struct {}\n\n", daoName)
+	p.Content += components.GenerateDaoObjFun(daoName)
+
+	deleteSigleColumns := psql.GetSingleDeleteFiledJSON()
+	for _, column := range deleteSigleColumns {
+		p.Content += components.GenerateDaoDeleteByKeyFunc(daoName, column, psql.GetFieldType(column))
+	}
+
+	p.Content += components.GenerateDaoCreateFunc(daoName)
+
+	//p.generateModelTable(modelName)
+}
+
 func (p *PFile) generateModelTable(modelName string) {
 	p.Content += fmt.Sprintf("func (*%s) TableName() string {\n", modelName)
 	p.Content += fmt.Sprintf("\treturn \"%s\"\n", strings.ToLower(modelName))
@@ -67,8 +87,10 @@ func (p *PFile) createModelFile() bool {
 
 func (p *PFile) createDaoFile() bool {
 
-	filePathPrefix := "/dao/"
 	pfile.generatePackage("dao")
+	pfile.generateDao()
+
+	filePathPrefix := "/dao/"
 	pfile.createFile(filePathPrefix)
 
 	return true
