@@ -11,7 +11,7 @@ func NewUserDao() *UserDao {
 	return &UserDao{}
 }
 
-func (*UserDao) DeleteUserByname(ctx *app.Context, name string) error {
+func (*UserDao) DeleteUserByName(ctx *app.Context, name string) error {
 	rst := ctx.DB.Where("name = ?", name)
 	if rst.Error != nil {
 		return rst.Error
@@ -19,7 +19,7 @@ func (*UserDao) DeleteUserByname(ctx *app.Context, name string) error {
 	return nil
 }
 
-func (*UserDao) DeleteUserByemail(ctx *app.Context, email string) error {
+func (*UserDao) DeleteUserByEmail(ctx *app.Context, email string) error {
 	rst := ctx.DB.Where("email = ?", email)
 	if rst.Error != nil {
 		return rst.Error
