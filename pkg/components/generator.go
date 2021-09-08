@@ -57,7 +57,7 @@ example:
 */
 func GenerateDaoDeleteByKeyFunc(model, key, keyType string) string {
 	lowerKey := strings.ToLower(key)
-	res := fmt.Sprintf("func (*%sDao) Delete%sBy%s(ctx *app.Context, %s %s ) error {\n", model, model,
+	res := fmt.Sprintf("func (*%sDao) Remove%sBy%s(ctx *app.Context, %s %s ) error {\n", model, model,
 		utils.FirstLetterToUpper(key), key, keyType)
 	res += fmt.Sprintf("\trst := ctx.DB.Where(\"%s = ?\", %s)\n", lowerKey, lowerKey)
 	res += fmt.Sprintf("\tif rst.Error != nil {\n")
