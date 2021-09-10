@@ -1,7 +1,6 @@
 package utils
 
 import (
-	"regexp"
 	"strings"
 )
 
@@ -19,15 +18,6 @@ func FirstLetterToLower(str string) string {
 	return strings.ToLower(str[:1]) + str[1:]
 }
 
-var matchFirstCap = regexp.MustCompile("(.)([A-Z][a-z]+)")
-var matchAllCap = regexp.MustCompile("([a-z0-9])([A-Z])")
-
-func ToSnakeCase(str string) string {
-	snake := matchFirstCap.ReplaceAllString(str, "${1}_${2}")
-	snake = matchAllCap.ReplaceAllString(snake, "${1}_${2}")
-	return strings.ToLower(snake)
-}
-
 func FindStrIgnoreCaseInSlice(str string, slice []string) bool {
 	for _, e := range slice {
 		if strings.EqualFold(str, e) {
@@ -36,4 +26,17 @@ func FindStrIgnoreCaseInSlice(str string, slice []string) bool {
 	}
 
 	return false
+}
+
+func SliceToStrByDelimiter(slice []string, delimiter string) string {
+	res := ""
+	for i, v := range slice {
+		if i == 0 {
+			res += v
+		} else {
+			res += delimiter + v
+		}
+	}
+
+	return res
 }

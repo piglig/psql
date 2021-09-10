@@ -60,9 +60,14 @@ func (p *PFile) generateDao() {
 	p.Content += fmt.Sprintf("type %sDao struct {}\n\n", daoName)
 	p.Content += components.GenerateDaoObjFun(daoName)
 
-	deleteSigleColumns := psql.GetSingleDeleteFiledJSON()
-	for _, column := range deleteSigleColumns {
+	deleteSingleColumns := psql.GetSingleDeleteFiledJSON()
+	for _, column := range deleteSingleColumns {
 		p.Content += components.GenerateDaoDeleteByKeyFunc(daoName, column, psql.GetFieldType(column))
+	}
+
+	deleteMultipleColumns := psql.GetMultipleDeleteFiledJSON()
+	for _, columns := range deleteMultipleColumns {
+		p.Content += components.GenerateDaoDeleteByKeysFunc(daoName, columns)
 	}
 
 	p.Content += components.GenerateDaoCreateFunc(daoName)

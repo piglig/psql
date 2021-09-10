@@ -23,6 +23,11 @@ type Model struct {
 	IntAttributes    []string `json:"int"`
 }
 
+type DDao struct {
+	Single   []string   `json:"single"`
+	Multiple [][]string `json:"multiple"`
+}
+
 type PJson struct {
 	model Model `json:"model"`
 }
@@ -30,6 +35,7 @@ type PJson struct {
 type PSql struct {
 	File
 	pjson PJson `json:"model"`
+	ddao  DDao  `json:"D"`
 }
 
 type File struct {
@@ -70,6 +76,10 @@ func (p *PSql) CheckFormat() bool {
 		return false
 	}
 
+	if !p.checkDao() {
+		return false
+	}
+
 	return true
 }
 
@@ -80,6 +90,24 @@ func (p *PSql) checkModel() bool {
 		return false
 	}
 
+	return true
+}
+
+func (p *PSql) checkDao() bool {
+	res := true
+	if !p.checkDDao() {
+		res = false
+	}
+
+	return res
+}
+
+func (p *PSql) checkDDao() bool {
+	modelResult := p.Get("Operate.D")
+	if err := json.Unmarshal([]byte(modelResult.String()), &p.ddao); err != nil {
+		logger.Error("InitFile json.Unmarshal fail:%v", err)
+		return false
+	}
 	return true
 }
 
@@ -105,17 +133,12 @@ func GetFieldType(field string) string {
 
 // GetSingleDeleteFiledJSON 获取删除操作的单一字段
 func GetSingleDeleteFiledJSON() []string {
-	gjsonRst := p.Get("Operate.D.single").Array()
-	var rst = make([]string, 0)
-	for _, r := range gjsonRst {
-		rst = append(rst, r.String())
-	}
-
-	return rst
+	return p.ddao.Single
 }
 
-func GetMultipleDeleteFiledJSON() {
-
+// GetMultipleDeleteFiledJSON 获取删除操作的多字段
+func GetMultipleDeleteFiledJSON() [][]string {
+	return p.ddao.Multiple
 }
 
 func GetFileName() string {
